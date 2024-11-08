@@ -1,6 +1,8 @@
 using Dima.Api.Common.Api;
 using Dima.Api.Endpoints.Categories;
+using Dima.Api.Endpoints.Identity;
 using Dima.Api.Endpoints.Transactions;
+using Dima.Api.Models;
 
 namespace Dima.Api.Endpoints;
 
@@ -8,6 +10,8 @@ public static class Endpoint {
     public static void MapEndpoints(this WebApplication app) {
         
         var endpoints = app.MapGroup("");
+
+        endpoints.MapGroup("/").WithTags("Health Check").MapGet("/", () => new {message = "OK"});
 
         endpoints.MapGroup("v1/categories")
         .WithTags("Categories")
@@ -26,6 +30,15 @@ public static class Endpoint {
         .MapEndpoint<DeleteTransactionEndpoint>()
         .MapEndpoint<GetTransactionByIdEndpoint>()
         .MapEndpoint<GetTransactionByPeriodEndpoint>();
+
+        endpoints.MapGroup("v1/identity")
+        .WithTags("Identity")
+        .MapIdentityApi<User>();
+
+        endpoints.MapGroup("v1/identity")
+        .WithTags("Identity")
+        .MapEndpoint<LogoutEndpoint>()
+        .MapEndpoint<GetRolesEndpoint>();
 
     }
 
